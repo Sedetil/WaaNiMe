@@ -23,11 +23,11 @@ async function handleTokenExchange(context) {
     }
 
     const payload = {
-      client_id: context.env.VITE_CLIENT_ID,
-      client_secret: context.env.VITE_CLIENT_SECRET,
+      client_id: context.env.CLIENT_ID,
+      client_secret: context.env.CLIENT_SECRET,
       code,
       grant_type: 'authorization_code',
-      redirect_uri: context.env.VITE_REDIRECT_URI,
+      redirect_uri: context.env.REDIRECT_URI,
     };
 
     const apiResponse = await fetch('https://anilist.co/api/v2/oauth/token', {
@@ -50,14 +50,11 @@ async function handleTokenExchange(context) {
       return new Response(
         JSON.stringify({ accessToken: responseData.access_token }),
         {
-          headers: { 'Content-Type': 'application.json' },
+          headers: { 'Content-Type': 'application/json' },
         },
       );
     } else {
-      console.error(
-        'Access token not found in the API response:',
-        responseBody,
-      );
+      console.error('Access token not found in the API response:', responseBody);
       throw new Error('Access token not found in the response');
     }
   } catch (error) {
@@ -69,7 +66,7 @@ async function handleTokenExchange(context) {
       }),
       {
         status: 500,
-        headers: { 'Content-Type': 'application.json' },
+        headers: { 'Content-Type': 'application/json' },
       },
     );
   }
