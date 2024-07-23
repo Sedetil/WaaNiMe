@@ -13,42 +13,35 @@ const Message = styled.div`
 const Callback = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [errorMessage, setErrorMessage] = useState(''); // State to store the error message
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const error = queryParams.get('error');
     const code = queryParams.get('code');
-    const PLATFORM = import.meta.env.VITE_DEPLOY_PLATFORM; // This will be set as 'VERCEL' or 'CLOUDFLARE'
+    const PLATFORM = import.meta.env.VITE_DEPLOY_PLATFORM;
 
-    // Check if there was an access denied error
     if (error === 'access_denied') {
-      setErrorMessage(
-        'Authorization revoked. Please click "Authorize" to grant access.',
-      );
-      navigate('/callback', { replace: true });
+      setErrorMessage('Authorization revoked. Please click "Authorize" to grant access.');
+      navigate('/', { replace: true });
       return;
     }
 
-    // Determine the endpoint based on the platform
-    const apiEndpoint =
-      PLATFORM === 'VERCEL' ? '/api/exchange-token' : '/exchange-token';
+    const apiEndpoint = PLATFORM === 'VERCEL' ? '/api/exchange-token' : '/exchange-token';
 
     if (code) {
-      axios
-        .post(apiEndpoint, { code })
+      axios.post(apiEndpoint, { code })
         .then((response) => {
-          // Store the access token in localStorage
+          console.log('Token exchange response:', response.data);
           localStorage.setItem('accessToken', response.data.accessToken);
-          // After setting the token, navigate and force a refresh
           navigate('/profile');
-          window.location.reload(); // Force a full page reload to refresh state
+          window.location.reload();
         })
         .catch((error) => {
           const errMsg = error.response?.data?.error || 'Error logging in :(';
-          console.error('Error in token exchange:', errMsg);
-          setErrorMessage(errMsg); // Store the error message
-          navigate('/callback', { replace: true });
+          console.error('Error in token exchange:', error);
+          setErrorMessage(errMsg);
+          navigate('/', { replace: true });
         });
     }
   }, [location, navigate]);
