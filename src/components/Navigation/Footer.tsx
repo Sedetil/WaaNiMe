@@ -142,7 +142,7 @@ export function Footer() {
             >
               miruro.com
             </a>{' '}
-            | Website Made by <strong>Miruro no Kuon</strong>
+            | Website Made by <strong>WanzzBOT</strong>
           </Text>
           <nav aria-label='Social Links'>
             <SocialIconsWrapper>
