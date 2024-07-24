@@ -50,14 +50,11 @@ async function handleTokenExchange(context) {
       return new Response(
         JSON.stringify({ accessToken: responseData.access_token }),
         {
-          headers: { 'Content-Type': 'application.json' },
+          headers: { 'Content-Type': 'application/json' },
         },
       );
     } else {
-      console.error(
-        'Access token not found in the API response:',
-        responseBody,
-      );
+      console.error('Access token not found in the API response:', responseBody);
       throw new Error('Access token not found in the response');
     }
   } catch (error) {
@@ -69,7 +66,7 @@ async function handleTokenExchange(context) {
       }),
       {
         status: 500,
-        headers: { 'Content-Type': 'application.json' },
+        headers: { 'Content-Type': 'application/json' },
       },
     );
   }
